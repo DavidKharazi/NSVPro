@@ -8,7 +8,7 @@ from .vectorestore import current_user
 
 class DatabaseManager:
     def __init__(self, db_path="metadata.db"):
-        self.connection = sqlite3.connect(db_path)
+        self.connection = sqlite3.connect(db_path, check_same_thread=False)
         self.connection.row_factory = sqlite3.Row  # Позволяет обращаться к колонкам по именам
         self.cursor = self.connection.cursor()
         self.db_path = db_path

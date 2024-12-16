@@ -10,8 +10,8 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
-from .routes import router
-from .models import init_metadata_db
+from app.routes import router
+from app.models import init_metadata_db
 from services.chat import SQLiteChatHistory
 from agents.agent import triage_agent
 from services.database import ChromaManager
@@ -116,6 +116,7 @@ def run_document_processing_cycle():
             schedule.every(1).minutes.do(download_csv)
             print("Запущен планировщик для загрузки файла CSV.")
             schedule.run_pending()
+            time.sleep(60)
 
             # Получаем текущий список файлов
             current_files = []
@@ -212,22 +213,59 @@ def run_document_processing_cycle():
             time.sleep(60)
 
 
-def run_server():
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+# def run_server():
+#     uvicorn.run("main:app", host="0.0.0.0", port=8000)
+#
+#
+#
+# if __name__ == "__main__":
+#     # Создаем два потока
+#     document_processing_thread = threading.Thread(target=run_document_processing_cycle)
+#     server_thread = threading.Thread(target=run_server)
+#
+#     # Запускаем потоки
+#     document_processing_thread.start()
+#     server_thread.start()
+#
+#     # Ждем завершения потоков
+#     document_processing_thread.join()
+#     server_thread.join()
 
+
+
+# def run_server():
+#     uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
+#
+#
+# if __name__ == "__main__":
+#     # Создаем два потока
+#     document_processing_thread = threading.Thread(target=run_document_processing_cycle)
+#     server_thread = threading.Thread(target=run_server)
+#
+#     # Запускаем потоки
+#     document_processing_thread.start()
+#     server_thread.start()
+#
+#     # Ждем завершения потоков
+#     document_processing_thread.join()
+#     server_thread.join()
+
+
+def run_server():
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":
-    # Создаем два потока
-    document_processing_thread = threading.Thread(target=run_document_processing_cycle)
+    # Запускаем сервер FastAPI первым
     server_thread = threading.Thread(target=run_server)
-
-    # Запускаем потоки
-    document_processing_thread.start()
+    server_thread.daemon = True  # Убедитесь, что сервер не блокирует завершение программы
     server_thread.start()
 
-    # Ждем завершения потоков
-    document_processing_thread.join()
+    # Запускаем второй поток для обработки документов
+    document_processing_thread = threading.Thread(target=run_document_processing_cycle)
+    document_processing_thread.daemon = True  # Этот поток также не будет блокировать завершение программы
+    document_processing_thread.start()
+
+    # Ждем завершения потоков (они будут работать в фоне)
     server_thread.join()
-
-
+    document_processing_thread.join()

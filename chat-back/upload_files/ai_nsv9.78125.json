@@ -1,0 +1,63 @@
+{
+    "Наушники JBL T110 (черный)": {
+        "ID": "2886",
+        "ARTICLE": "bxr_demo_2622",
+        "SECTION_NAME": "Наушники",
+        "DESCRIPTION": "наушники с микрофоном, внутриканальные, портативные, 20-20000 Гц, кабель 1.2 м",
+        "PRICE": "43.88 BYN",
+        "URL": "/catalog/audiotekhnika/naushniki/naushniki_jbl_t110_chernyy/",
+        "SALES": "N",
+        "PREORDER": "N"
+    },
+    "USB 32GB SmartBuy Glossy series, черный": {
+        "ID": "3815",
+        "ARTICLE": "bxr_demo_3559",
+        "SECTION_NAME": "USB накопители",
+        "DESCRIPTION": "USB Флеш-накопитель SmartBuy Glossy Series 3.0 32GB",
+        "PRICE": "17.90 BYN",
+        "URL": "/catalog/kompyutery-i-seti/usb-nakopiteli/usb_32gb_smartbuy_glossy_series_chernyy/",
+        "SALES": "Y",
+        "PREORDER": "N"
+    },
+    "USB 32GB SmartBuy V-Cut, серебристый": {
+        "ID": "3816",
+        "ARTICLE": "bxr_demo_3560",
+        "SECTION_NAME": "USB накопители",
+        "DESCRIPTION": "USB 32GB",
+        "PRICE": "17.90 BYN",
+        "URL": "/catalog/kompyutery-i-seti/usb-nakopiteli/usb_32gb_smartbuy_v_cut_serebristyy/",
+        "SALES": "Y",
+        "PREORDER": "N"
+    },
+    "USB 16GB SmartBuy V-Cut, черный": {
+        "ID": "3945",
+        "ARTICLE": "bxr_demo_3691",
+        "SECTION_NAME": "USB накопители",
+        "DESCRIPTION": "16 ГБ, USB 2.0 Type-A, с колпачком, металл/пластик",
+        "PRICE": "17.90 BYN",
+        "URL": "/catalog/kompyutery-i-seti/usb-nakopiteli/usb_16gb_smartbuy_v_cut_chernyy/",
+        "SALES": "Y",
+        "PREORDER": "N"
+    },
+    "Наушники Panasonic RP-HJE125E-W (белый)": {
+        "ID": "5152",
+        "ARTICLE": "bxr_demo_4904",
+        "SECTION_NAME": "Наушники",
+        "DESCRIPTION": "наушники, внутриканальные, портативные, 10-24000 Гц, кабель 1.1 м",
+        "PRICE": "35.90 BYN",
+        "URL": "/catalog/audiotekhnika/naushniki/naushniki_panasonic_rp_hje125e_belyy/",
+        "SALES": "N",
+        "PREORDER": "N"
+    },
+    "Наушники Panasonic RP-HJE118GUK (черный)": {
+        "ID": "33183",
+        "ARTICLE": "nsv0028274",
+        "SECTION_NAME": "Наушники",
+        "DESCRIPTION": "наушники, портативные, оформление закрытое, излучатель 9 мм, 12-23000 Гц, 16 Ом, кабель 1.1 м",
+        "PRICE": "35.90 BYN",
+        "URL": "/catalog/audiotekhnika/naushniki/panasonic-rp-hje118gu-k/",
+        "SALES": "N",
+        "PREORDER": "N"
+    }
+
+}

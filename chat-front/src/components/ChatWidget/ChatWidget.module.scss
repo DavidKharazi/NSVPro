@@ -1,0 +1,141 @@
+@import '../../styles/';
+
+.widget {
+  &Overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 9000;
+    pointer-events: none;
+  }
+
+  &Container {
+    position: absolute;
+    pointer-events: auto;
+    opacity: 0;
+    bottom: 0;
+    // width: 400px;
+    margin: 20px;
+    transition: opacity 0.3s ease;
+
+    &Right {
+      right: 0;
+    }
+
+    &In {
+      animation: slideIn ease-in-out 0.5s forwards;
+    }
+
+    &Out {
+      animation: slideOut ease-in-out 0.5s forwards;
+    }
+  }
+
+  &Button {
+    // width: 400px;
+    width: 48px;
+    height: 48px;
+    // padding: 20px;
+    // border-radius: 10px;
+    border-radius: 50%;
+    background: url('../ChatBot/assets/icons/widgetButton.svg');
+    border: none;
+    cursor: pointer;
+    // background: linear-gradient(315deg, #086bcd, #29a0ff);
+    // @include text($white, 400, 14px, Inter);
+    // @include flexbox(flex-start, stretch, row, 4px);
+    // transition: all 0.3s ease;
+
+    &:hover {
+      //   background: linear-gradient(315deg, #29a0ff, #086bcd);
+      background-color: #2392ec;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+  }
+
+  &Chat {
+    animation: slideIn 0.5s forwards;
+  }
+
+  &ChatExiting {
+    animation: slideOut 0.5s forwards;
+  }
+}
+
+// .loader {
+//   width: 24px;
+//   height: 20px;
+//   display: inline-block;
+//   position: relative;
+// }
+
+// .loader::after,
+// .loader::before {
+//   content: '';
+//   box-sizing: border-box;
+//   width: 20px;
+//   height: 20px;
+//   border-radius: 50%;
+//   background: #fff;
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   animation: animloader 2s linear infinite;
+// }
+
+// .loader::after {
+//   animation-delay: 1s;
+// }
+
+// @keyframes animloader {
+//   0% {
+//     transform: scale(0);
+//     opacity: 1;
+//   }
+
+//   100% {
+//     transform: scale(1);
+//     opacity: 0;
+//   }
+// }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 480px) {
+  .widget {
+    &Container {
+      //   width: calc(100% - 40px); // Учитываем отступы по бокам
+      margin: 20px;
+      max-width: none;
+    }
+
+    &Button {
+      padding: 15px;
+      font-size: 12px;
+    }
+  }
+}

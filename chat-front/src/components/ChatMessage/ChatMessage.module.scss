@@ -1,0 +1,48 @@
+@import '../../styles/';
+
+.reqAi {
+  padding: 8px 16px;
+  font-weight: 400;
+  margin: 8px;
+  border-radius: 12px;
+  background: rgb(235, 235, 235);
+  align-self: flex-end;
+  word-break: break-word;
+  max-width: 75%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resAi {
+  padding: 8px 16px;
+  font-weight: 400;
+  margin: 8px 0;
+  border-radius: 10px;
+  background: #f2f2f2;
+  color: $black;
+  align-self: flex-start;
+  word-break: break-word;
+  max-width: 75%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chatMessagesWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  .chatMessagesIcon {
+    width: 32px;
+    height: 32px;
+    margin-left: 20px;
+    margin-right: 13px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+  }
+}
+
+
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

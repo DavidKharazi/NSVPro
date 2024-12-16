@@ -93,170 +93,62 @@ app.add_middleware(
 app.mount("/", StaticFiles(directory="../chat-front/dist", html=True), name="static")
 
 
-#
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run("main:app", host="0.0.0.0", port=8000)
+
+def check_new_files(previous_files, current_files):
+    # Извлекаем только имена файлов, без полных путей
+    previous_file_names = {os.path.basename(f) for f in previous_files}
+    current_file_names = {os.path.basename(f) for f in current_files}
+
+    new_files = current_file_names - previous_file_names
+    return [f for f in current_files if os.path.basename(f) in new_files]
 
 
-def check_new_files_in_s3(previous_files):
-    """
-    Проверяет наличие новых файлов в S3
-
-    :param previous_files: Список ранее обнаруженных файлов
-    :return: Список новых файлов и обновленный список всех файлов
-    """
-    current_files = []
-
-    # Собираем файлы из разных источников (txt, json, docx, csv)
-    for file_type in ['txt', 'json', 'docx', 'csv']:
-        files = load_documents_local(BASE_DIRECTORY, FILE_TYPES)
-        # files = load_s3_files(DATA_BUCKET, f'{current_user}/{file_type}/', f'.{file_type}')
-        current_files.extend(files)
-
-    # Находим новые файлы
-    new_files = [file for file in current_files if file not in previous_files]
-
-    return new_files, current_files
-
-
-# def run_document_processing_cycle():
-#     # Список ранее обработанных файлов
-#     previous_files = []
-#
-#     while True:
-#         try:
-#             """Настройка расписания (например, загрузка каждые 6 часов (hours), минут (minutes) и т.д.)"""
-#             schedule.every(1).minutes.do(download_csv)
-#             print("Запущен планировщик для загрузки файла CSV.")
-#             schedule.run_pending()
-#             time.sleep(1)
-#
-#             # Проверяем наличие новых файлов
-#             new_files, all_files = check_new_files_in_s3(previous_files)
-#
-#             # Если есть новые файлы
-#             if new_files:
-#                 print(f"Обнаружено новых файлов: {len(new_files)}")
-#
-#                 # 1. Загрузка документов (5 секунд максимум)
-#                 start_time = time.time()
-#                 DOCS = load_documents_local(BASE_DIRECTORY, FILE_TYPES)
-#                 # DOCS = load_documents('s3', DATA_BUCKET, ['txt', 'json', 'docx', 'csv'])
-#                 docs_time = time.time() - start_time
-#                 print(f"Документы загружены за {docs_time:.2f} сек")
-#
-#                 if docs_time < 5:
-#                     time.sleep(5 - docs_time)
-#
-#                 time.sleep(3)
-#
-#                 # 2. Нарезка документов на чанки (5 секунд максимум)
-#                 start_time = time.time()
-#                 chunks_res = split_docs_to_chunks(DOCS, ['txt', 'json', 'docx', 'csv'])
-#                 chunks_time = time.time() - start_time
-#                 print(f"Документы разделены на чанки за {chunks_time:.2f} сек")
-#
-#                 if chunks_time < 5:
-#                     time.sleep(5 - chunks_time)
-#
-#                 time.sleep(3)
-#
-#                 current_chroma_path = (
-#                     ChromaManager.CHROMA_PATH_SECONDARY
-#                     if ChromaManager.USE_PRIMARY_CHROMA
-#                     else ChromaManager.CHROMA_PATH_PRIMARY
-#                 )
-#                 print(f"CREATING VECTORSTORE IN: {current_chroma_path}")
-#
-#                 current_chroma_path = (
-#                     ChromaManager.CHROMA_PATH_SECONDARY
-#                     if ChromaManager.USE_PRIMARY_CHROMA
-#                     else ChromaManager.CHROMA_PATH_PRIMARY
-#                 )
-#                 print(f"check_DB: {current_chroma_path}")
-#
-#                 # Создание новой vectorstore
-#                 vectorstore_secondary = get_chroma_vectorstore(
-#                     documents=chunks_res,
-#                     embeddings=embeddings,
-#                     persist_directory=current_chroma_path
-#                 )
-#
-#                 # Устанавливаем флаг, что новая база готова
-#                 ChromaManager.NEW_DATABASE_READY = True
-#
-#                 # Обновляем список обработанных файлов
-#                 previous_files = all_files
-#
-#                 # Удаляем старую базу
-#                 if current_chroma_path == f'./chroma/{current_user}/primary/':
-#                     vectorstore = Chroma(persist_directory=ChromaManager.CHROMA_PATH_SECONDARY)
-#                     vectorstore.delete_collection()
-#                 else:
-#                     vectorstore = Chroma(persist_directory=ChromaManager.CHROMA_PATH_PRIMARY)
-#                     vectorstore.delete_collection()
-#
-#                 # Пауза для stabilization
-#                 time.sleep(5)
-#
-#             else:
-#                 # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
-#                 time.sleep(60)
-#
-#         except Exception as e:
-#             print(f"Ошибка в цикле обработки документов: {e}")
-#             # Небольшая пауза в случае ошибки
-#             time.sleep(60)
-#
-#
-# def run_server():
-#     uvicorn.run("main:app", host="0.0.0.0", port=8000)
-#
-#
-#
-# if __name__ == "__main__":
-#     # Создаем два потока
-#     document_processing_thread = threading.Thread(target=run_document_processing_cycle)
-#     server_thread = threading.Thread(target=run_server)
-#
-#     # Запускаем потоки
-#     document_processing_thread.start()
-#     server_thread.start()
-#
-#     # Ждем завершения потоков
-#     document_processing_thread.join()
-#     server_thread.join()
-#
-#
 def run_document_processing_cycle():
+    """
+    Непрерывный цикл обработки документов с мониторингом новых файлов
+    """
     # Список ранее обработанных файлов
     previous_files = []
 
-    # Настройка расписания
-    schedule.every(1).minutes.do(download_csv)
-    print("Запущен планировщик для загрузки CSV файла.")
-
     while True:
         try:
-            # Выполняем запланированные задачи
+            # Запуск планировщика CSV
+            schedule.every(1).minutes.do(download_csv)
+            print("Запущен планировщик для загрузки файла CSV.")
             schedule.run_pending()
 
-            # Проверяем наличие новых файлов
-            new_files, all_files = check_new_files_in_s3(previous_files)
-            print(f"Новые файлы: {new_files}")
+            # Получаем текущий список файлов
+            current_files = []
+
+            # Собираем файлы из разных источников
+            docs_dict = load_documents_local(BASE_DIRECTORY, FILE_TYPES)
+
+            # Извлекаем пути к файлам из словаря документов
+            for file_type in FILE_TYPES:
+                if docs_dict[file_type]:
+                    if file_type == 'json':
+                        current_files.extend([meta['source'] for meta in docs_dict['json_metadata']])
+                    else:
+                        current_files.extend([doc.source for doc in docs_dict[file_type]])
+
+            print(f"Найдено файлов: {len(current_files)}")
+            print("Список файлов:", current_files)
+
+            # Находим новые файлы
+            new_files = [file for file in current_files if file not in previous_files]
 
             # Если есть новые файлы
             if new_files:
                 print(f"Обнаружено новых файлов: {len(new_files)}")
+                print("Новые файлы:", new_files)
 
                 # 1. Загрузка документов
                 start_time = time.time()
                 DOCS = load_documents_local(BASE_DIRECTORY, FILE_TYPES)
-                print("Документы загружены локально.")
                 docs_time = time.time() - start_time
                 print(f"Документы загружены за {docs_time:.2f} сек")
 
+                # Выравнивание времени загрузки
                 if docs_time < 5:
                     time.sleep(5 - docs_time)
 
@@ -264,49 +156,66 @@ def run_document_processing_cycle():
 
                 # 2. Нарезка документов на чанки
                 start_time = time.time()
-                chunks_res = split_docs_to_chunks(DOCS, ['txt', 'json', 'docx', 'csv'])
-                print("Документы разделены на чанки.")
+                chunks_res = split_docs_to_chunks(DOCS, FILE_TYPES)
                 chunks_time = time.time() - start_time
                 print(f"Документы разделены на чанки за {chunks_time:.2f} сек")
 
+                # Выравнивание времени нарезки
                 if chunks_time < 5:
                     time.sleep(5 - chunks_time)
 
                 time.sleep(3)
 
-                # Загрузка данных в Chroma
-                try:
-                    current_chroma_path = (
-                        ChromaManager.CHROMA_PATH_SECONDARY
-                        if ChromaManager.USE_PRIMARY_CHROMA
-                        else ChromaManager.CHROMA_PATH_PRIMARY
-                    )
-                    print(f"Создаем Vectorstore в: {current_chroma_path}")
+                # Определение текущего пути для Chroma
+                current_chroma_path = (
+                    ChromaManager.CHROMA_PATH_SECONDARY
+                    if ChromaManager.USE_PRIMARY_CHROMA
+                    else ChromaManager.CHROMA_PATH_PRIMARY
+                )
+                print(f"CREATING VECTORSTORE IN: {current_chroma_path}")
 
-                    vectorstore_secondary = get_chroma_vectorstore(
-                        documents=chunks_res,
-                        embeddings=embeddings,
-                        persist_directory=current_chroma_path
-                    )
+                # Создание новой vectorstore
+                vectorstore_secondary = get_chroma_vectorstore(
+                    documents=chunks_res,
+                    embeddings=embeddings,
+                    persist_directory=current_chroma_path
+                )
 
-                    ChromaManager.NEW_DATABASE_READY = True
-                    print(f"Данные успешно загружены в Chroma в {current_chroma_path}")
-                except Exception as e:
-                    print(f"Ошибка при загрузке данных в Chroma: {e}")
+                # Устанавливаем флаг, что новая база готова
+                ChromaManager.NEW_DATABASE_READY = True
 
                 # Обновляем список обработанных файлов
-                previous_files = all_files
+                previous_files = current_files
+
+                # Удаление старой базы
+                try:
+                    if current_chroma_path == f'./chroma/{current_user}/primary/':
+                        vectorstore = Chroma(persist_directory=ChromaManager.CHROMA_PATH_SECONDARY)
+                        vectorstore.delete_collection()
+                    else:
+                        vectorstore = Chroma(persist_directory=ChromaManager.CHROMA_PATH_PRIMARY)
+                        vectorstore.delete_collection()
+                except Exception as delete_error:
+                    print(f"Ошибка при удалении старой базы: {delete_error}")
+
+                # Пауза для стабилизации
                 time.sleep(5)
 
             else:
+                # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
+                print("Новых файлов не обнаружено. Ожидание...")
                 time.sleep(60)
 
         except Exception as e:
-            print(f"Ошибка в цикле обработки документов: {e}")
+            print(f"Критическая ошибка в цикле обработки документов: {e}")
+            # Большая пауза в случае серьезной ошибки
             time.sleep(60)
+
 
 def run_server():
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
+
+
 
 if __name__ == "__main__":
     # Создаем два потока
@@ -320,3 +229,5 @@ if __name__ == "__main__":
     # Ждем завершения потоков
     document_processing_thread.join()
     server_thread.join()
+
+

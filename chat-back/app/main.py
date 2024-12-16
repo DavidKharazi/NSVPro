@@ -182,8 +182,19 @@ def run_document_processing_cycle():
                     persist_directory=current_chroma_path
                 )
 
+                # Установка путей к Chroma
+                ChromaManager.CHROMA_PATH_PRIMARY = f'./chroma/{current_user}/primary/'
+                ChromaManager.CHROMA_PATH_SECONDARY = f'./chroma/{current_user}/secondary/'
+
                 # Устанавливаем флаг, что новая база готова
                 ChromaManager.NEW_DATABASE_READY = True
+                if ChromaManager.NEW_DATABASE_READY:
+                    # Переключаем базу
+                    ChromaManager.USE_PRIMARY_CHROMA = not ChromaManager.USE_PRIMARY_CHROMA
+                    # Сбрасываем флаг
+                    ChromaManager.NEW_DATABASE_READY = False
+
+                    print(f"SWITCHED TO PRIMARY: {ChromaManager.USE_PRIMARY_CHROMA}")
 
                 # Обновляем список обработанных файлов
                 previous_files = current_files
@@ -233,39 +244,39 @@ def run_document_processing_cycle():
 
 
 
-# def run_server():
-#     uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
-#
-#
-# if __name__ == "__main__":
-#     # Создаем два потока
-#     document_processing_thread = threading.Thread(target=run_document_processing_cycle)
-#     server_thread = threading.Thread(target=run_server)
-#
-#     # Запускаем потоки
-#     document_processing_thread.start()
-#     server_thread.start()
-#
-#     # Ждем завершения потоков
-#     document_processing_thread.join()
-#     server_thread.join()
-
-
 def run_server():
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":
-    # Запускаем сервер FastAPI первым
+    # Создаем два потока
+    document_processing_thread = threading.Thread(target=run_document_processing_cycle)
     server_thread = threading.Thread(target=run_server)
-    server_thread.daemon = True  # Убедитесь, что сервер не блокирует завершение программы
+
+    # Запускаем потоки
+    document_processing_thread.start()
     server_thread.start()
 
-    # Запускаем второй поток для обработки документов
-    document_processing_thread = threading.Thread(target=run_document_processing_cycle)
-    document_processing_thread.daemon = True  # Этот поток также не будет блокировать завершение программы
-    document_processing_thread.start()
-
-    # Ждем завершения потоков (они будут работать в фоне)
-    server_thread.join()
+    # Ждем завершения потоков
     document_processing_thread.join()
+    server_thread.join()
+
+
+# def run_server():
+#     uvicorn.run("app.main:app", host="0.0.0.0", port=8000)
+#
+#
+# if __name__ == "__main__":
+#     # Запускаем сервер FastAPI первым
+#     server_thread = threading.Thread(target=run_server)
+#     server_thread.daemon = True  # Убедитесь, что сервер не блокирует завершение программы
+#     server_thread.start()
+#
+#     # Запускаем второй поток для обработки документов
+#     document_processing_thread = threading.Thread(target=run_document_processing_cycle)
+#     document_processing_thread.daemon = True  # Этот поток также не будет блокировать завершение программы
+#     document_processing_thread.start()
+#
+#     # Ждем завершения потоков (они будут работать в фоне)
+#     server_thread.join()
+#     document_processing_thread.join()

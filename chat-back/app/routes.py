@@ -212,8 +212,8 @@ async def websocket_endpoint(websocket: WebSocket):
     chat_history_for_chain.current_session_id = session_id
 
     # Установка путей к Chroma
-    ChromaManager.CHROMA_PATH_PRIMARY = f'./chroma/{current_user}/primary/'
-    ChromaManager.CHROMA_PATH_SECONDARY = f'./chroma/{current_user}/secondary/'
+    # ChromaManager.CHROMA_PATH_PRIMARY = f'./chroma/{current_user}/primary/'
+    # ChromaManager.CHROMA_PATH_SECONDARY = f'./chroma/{current_user}/secondary/'
 
     # Инициализация состояния
     state = {
@@ -228,13 +228,13 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_json()
 
             # Проверяем, готова ли новая база
-            if ChromaManager.NEW_DATABASE_READY:
-                # Переключаем базу
-                ChromaManager.USE_PRIMARY_CHROMA = not ChromaManager.USE_PRIMARY_CHROMA
-                # Сбрасываем флаг
-                ChromaManager.NEW_DATABASE_READY = False
-
-                print(f"SWITCHED TO PRIMARY: {ChromaManager.USE_PRIMARY_CHROMA}")
+            # if ChromaManager.NEW_DATABASE_READY:
+            #     # Переключаем базу
+            #     ChromaManager.USE_PRIMARY_CHROMA = not ChromaManager.USE_PRIMARY_CHROMA
+            #     # Сбрасываем флаг
+            #     ChromaManager.NEW_DATABASE_READY = False
+            #
+            #     print(f"SWITCHED TO PRIMARY: {ChromaManager.USE_PRIMARY_CHROMA}")
 
             # Получаем актуальный retriever при каждом запросе
             retriever = ChromaManager.get_current_retriever(embeddings)

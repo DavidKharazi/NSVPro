@@ -12,7 +12,7 @@ FROM python:3.9
 WORKDIR /app
 
 # Copy and install backend dependencies
-COPY ./chat-back/requirements.txt .
+COPY ./chat_back/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the backend code

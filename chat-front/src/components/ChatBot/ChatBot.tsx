@@ -49,12 +49,12 @@ function ChatBot({ closeChat, isLeft }: IChatBotProps) {
       const username = localStorage.getItem('username');
       if (username && !wsRef.current) {
         // Проверяем, что WebSocket еще не создан
-        const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
-        // const ws = new WebSocket(
-        //     `wss://nsvcyberman.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
-        //         username
-        //     )}`
-        // );
+        // const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
+        const ws = new WebSocket(
+            `wss://nsvcyberman1.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
+                username
+            )}`
+        );
         wsRef.current = ws; // Сохраняем WebSocket в useRef
 
         ws.onopen = () => {
@@ -190,12 +190,12 @@ function ChatBot({ closeChat, isLeft }: IChatBotProps) {
       }
 
 
-      const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
-      // const ws = new WebSocket(
-      //     `wss://nsvcyberman.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
-      //         username
-      //     )}`
-      // );
+      // const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
+      const ws = new WebSocket(
+          `wss://nsvcyberman1.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
+              username
+          )}`
+      );
       setSocket(ws);
       wsRef.current = ws; // Сохраняем WebSocket в useRef
 

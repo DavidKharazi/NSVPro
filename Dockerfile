@@ -16,7 +16,7 @@ COPY ./chat_back/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the backend code
-COPY ./chat-back .
+COPY ./chat_back .
 
 RUN pip install chromadb
 
@@ -24,7 +24,7 @@ RUN pip install chromadb
 COPY --from=frontend-builder /frontend/dist ./dist
 
 # Serve the static files from the current working directory
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 
 

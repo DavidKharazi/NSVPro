@@ -34,6 +34,7 @@ llm = ChatOpenAI(model=model_name, temperature=temperature)
 # Укажите URL для загрузки файла
 CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
 
+# CSV_URL = "https://storage.yandexcloud.net/utlik/skycross/csv/aiCSV%20(6).csv"
 
 # Укажите путь для папки, где будут храниться файлы
 DATA_FOLDER = "data"
@@ -113,12 +114,12 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
-    schedule.every().day.at("05:00").do(download_csv)
-    schedule.every().day.at("08:00").do(download_csv)
-    schedule.every().day.at("11:00").do(download_csv)
-    schedule.every().day.at("14:00").do(download_csv)
-    schedule.every().day.at("16:18").do(download_csv)
-    schedule.every().day.at("20:00").do(download_csv)
+    schedule.every().day.at("07:00").do(download_csv)
+    schedule.every().day.at("10:00").do(download_csv)
+    schedule.every().day.at("13:00").do(download_csv)
+    schedule.every().day.at("15:15").do(download_csv)
+    schedule.every().day.at("18:00").do(download_csv)
+    schedule.every().day.at("21:00").do(download_csv)
     # schedule.every(1).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 

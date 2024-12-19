@@ -114,12 +114,11 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
-    schedule.every().day.at("07:00").do(download_csv)
-    schedule.every().day.at("10:00").do(download_csv)
-    schedule.every().day.at("13:00").do(download_csv)
-    schedule.every().day.at("15:15").do(download_csv)
-    schedule.every().day.at("18:00").do(download_csv)
-    schedule.every().day.at("21:00").do(download_csv)
+    schedule.every().day.at("04:00").do(download_csv)
+    schedule.every().day.at("08:00").do(download_csv)
+    schedule.every().day.at("11:00").do(download_csv)
+    schedule.every().day.at("14:20").do(download_csv)
+    schedule.every().day.at("17:00").do(download_csv)
     # schedule.every(1).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 

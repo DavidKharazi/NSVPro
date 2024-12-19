@@ -11,7 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from .database import add_filename_to_metadata
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from app.models import init_metadata_db
-from agents.agent import llm
+from agents.tools import llm
 from docx.oxml.ns import qn
 import sqlite3
 import re

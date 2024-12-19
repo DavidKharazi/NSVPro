@@ -117,7 +117,7 @@ def run_document_processing_cycle():
     schedule.every().day.at("6:00").do(download_csv)
     schedule.every().day.at("9:00").do(download_csv)
     schedule.every().day.at("12:00").do(download_csv)
-    schedule.every().day.at("15:00").do(download_csv)
+    schedule.every().day.at("15:15").do(download_csv)
     schedule.every().day.at("18:00").do(download_csv)
     schedule.every().day.at("21:00").do(download_csv)
     # schedule.every(1).minutes.do(download_csv)

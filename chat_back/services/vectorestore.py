@@ -11,6 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from .database import add_filename_to_metadata
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from app.models import init_metadata_db
+from agents.agent import llm
 from docx.oxml.ns import qn
 import sqlite3
 import re
@@ -298,8 +299,13 @@ def get_chroma_vectorstore(documents, embeddings, persist_directory):
 
 vectorstore = get_chroma_vectorstore(documents=chunks_res, embeddings=embeddings, persist_directory=CHROMA_PATH)
 
-retriever = vectorstore.as_retriever(search_kwargs={"k": 3}, search_type='similarity')
+# retriever = vectorstore.as_retriever(search_kwargs={"k": 3}, search_type='similarity')
+from langchain.retrievers.multi_query import MultiQueryRetriever
 
+retriever = MultiQueryRetriever.from_llm(
+    retriever=vectorstore.as_retriever(search_kwargs={"k": 2}, search_type='similarity'),
+    llm=llm
+)
 #---------------------------------------------------------------------
 
 

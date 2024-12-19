@@ -4,7 +4,7 @@ from .vectorestore import current_user
 from agents.agent import run_full_turn
 from services.database import DatabaseManager, db_manager
 from langchain_community.chat_message_histories import ChatMessageHistory
-# from .vectorestore import retriever
+from .vectorestore import retriever
 import logging
 from fastapi import WebSocket, status
 

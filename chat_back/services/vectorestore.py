@@ -5,6 +5,7 @@ from fnmatch import fnmatchcase
 from typing import Optional, Dict, Any, List, Tuple
 from io import BytesIO
 from docx import Document as DocxDocument
+import requests
 from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from .database import add_filename_to_metadata
@@ -29,14 +30,6 @@ embeddings = HuggingFaceEmbeddings(
 )
 
 
-
-session = boto3.session.Session()
-s3_client = session.client(
-    service_name='s3',
-    endpoint_url='https://storage.yandexcloud.net',
-    aws_access_key_id='YCAJEt7ilkMDiPuuZA--Sgb1H',
-    aws_secret_access_key='YCOJE46MLMRlPll_kl6oIllqvT7P7S65E4QohXLZ',
-)
 
 
 init_metadata_db()
@@ -304,6 +297,7 @@ def get_chroma_vectorstore(documents, embeddings, persist_directory):
 
 
 vectorstore = get_chroma_vectorstore(documents=chunks_res, embeddings=embeddings, persist_directory=CHROMA_PATH)
+
 retriever = vectorstore.as_retriever(search_kwargs={"k": 3}, search_type='similarity')
 
 #---------------------------------------------------------------------

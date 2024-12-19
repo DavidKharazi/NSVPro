@@ -32,7 +32,9 @@ llm = ChatOpenAI(model=model_name, temperature=temperature)
 
 
 # Укажите URL для загрузки файла
+# CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
 CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
+
 
 # Укажите путь для папки, где будут храниться файлы
 DATA_FOLDER = "data"
@@ -112,10 +114,13 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
-    # schedule.every().day.at("13:10").do(download_csv)
-    # schedule.every().day.at("12:38").do(download_csv)
-    # schedule.every().day.at("13:44").do(download_csv)
-    schedule.every(3).minutes.do(download_csv)
+    schedule.every().day.at("6:00").do(download_csv)
+    schedule.every().day.at("9:00").do(download_csv)
+    schedule.every().day.at("12:00").do(download_csv)
+    schedule.every().day.at("15:00").do(download_csv)
+    schedule.every().day.at("18:00").do(download_csv)
+    schedule.every().day.at("21:00").do(download_csv)
+    # schedule.every(1).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 
     while True:
@@ -222,7 +227,7 @@ def run_document_processing_cycle():
             else:
                 # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
                 print("Новых файлов не обнаружено. Ожидание...")
-                time.sleep(30)
+                time.sleep(1000)
 
 
         except Exception as e:

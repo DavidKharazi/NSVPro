@@ -117,7 +117,7 @@ def run_document_processing_cycle():
     schedule.every().day.at("08:00").do(download_csv)
     schedule.every().day.at("11:00").do(download_csv)
     schedule.every().day.at("14:00").do(download_csv)
-    schedule.every().day.at("16:20").do(download_csv)
+    schedule.every().day.at("16:18").do(download_csv)
     schedule.every().day.at("20:00").do(download_csv)
     # schedule.every(1).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
@@ -226,7 +226,7 @@ def run_document_processing_cycle():
             else:
                 # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
                 print("Новых файлов не обнаружено. Ожидание...")
-                time.sleep(30)
+                time.sleep(600)
 
 
         except Exception as e:

@@ -2,7 +2,7 @@ import json
 import docx
 import boto3
 from fnmatch import fnmatchcase
-from typing import Optional, Dict, Any, List, Tuple
+from typing import Optional, Dict, Any, List, Tuple, Union
 from io import BytesIO
 from docx import Document as DocxDocument
 import requests
@@ -131,11 +131,17 @@ def load_csv_local(directory: str) -> List[Document]:
     return docs
 
 
+# FILES = ['el_cars.json', 'faq.json', 'salons.json']
+
 def load_documents_local(base_directory: str, file_types: List[str]) -> dict:
     """
     Загружаем документы из локальной папки.
     """
     all_docs = {'txt': None, 'json': None, 'json_metadata': None, 'docx': None, 'csv': None}
+
+    # for file in FILES:
+    #     all_docs[file] = load_json_local(base_directory)
+
     if 'txt' in file_types:
         all_docs['txt'] = load_txt_local(base_directory)
     if 'json' in file_types:
@@ -146,6 +152,7 @@ def load_documents_local(base_directory: str, file_types: List[str]) -> dict:
         all_docs['docx'] = load_docx_local(base_directory)
     if 'csv' in file_types:
         all_docs['csv'] = load_csv_local(base_directory)
+
     return all_docs
 
 
@@ -306,6 +313,11 @@ retriever = MultiQueryRetriever.from_llm(
     retriever=vectorstore.as_retriever(search_kwargs={"k": 2}, search_type='similarity'),
     llm=llm
 )
+
+import logging
+
+logging.basicConfig()
+logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 #---------------------------------------------------------------------
 
 

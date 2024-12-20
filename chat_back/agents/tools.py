@@ -60,6 +60,7 @@ def create_order(product_id: int, fio: str, phone: str, preorder: str) -> dict:
 
 # Укажите URL для загрузки файла
 CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
+
 # CSV_URL = "https://storage.yandexcloud.net/utlik/skycross/csv/aiCSV%20(6).csv"
 
 
@@ -127,7 +128,9 @@ def download_csv():
             }
 
     """Удаление всех существующих файлов в папке DATA_FOLDER_JSON"""
-    # time.sleep(2)
+    """Файлы, которые всегда должны быть в БД. Они практически никогда не меняются"""
+    # file_const = ['el_cars.json', 'faq.json', 'salons.json']
+
     for filename in os.listdir(DATA_FOLDER_JSON):
         file_path2 = os.path.join(DATA_FOLDER_JSON, filename)
         try:

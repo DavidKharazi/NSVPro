@@ -98,15 +98,15 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
-    # schedule.every().day.at("03:00").do(download_csv)
-    # schedule.every().day.at("05:00").do(download_csv)
-    # schedule.every().day.at("07:00").do(download_csv)
-    # schedule.every().day.at("09:00").do(download_csv)
-    # schedule.every().day.at("11:00").do(download_csv)
-    # schedule.every().day.at("13:00").do(download_csv)
-    # schedule.every().day.at("15:00").do(download_csv)
-    # schedule.every().day.at("17:00").do(download_csv)
-    schedule.every(2).minutes.do(download_csv)
+    schedule.every().day.at("03:00").do(download_csv)
+    schedule.every().day.at("05:00").do(download_csv)
+    schedule.every().day.at("07:00").do(download_csv)
+    schedule.every().day.at("09:00").do(download_csv)
+    schedule.every().day.at("11:00").do(download_csv)
+    schedule.every().day.at("13:00").do(download_csv)
+    schedule.every().day.at("15:00").do(download_csv)
+    schedule.every().day.at("17:00").do(download_csv)
+    # schedule.every(2).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 
     while True:
@@ -213,7 +213,7 @@ def run_document_processing_cycle():
             else:
                 # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
                 print("Новых файлов не обнаружено. Ожидание...")
-                time.sleep(30)
+                time.sleep(600)
 
 
         except Exception as e:

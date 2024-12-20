@@ -1,4 +1,6 @@
 import os
+import shutil
+
 import requests
 from langchain_openai import ChatOpenAI
 from authlib.integrations.starlette_client import OAuth
@@ -74,7 +76,82 @@ csv_file_path = 'data/aiCSV.csv'
 # Создание папок, если их нет
 os.makedirs(DATA_FOLDER, exist_ok=True)
 os.makedirs(DATA_FOLDER_JSON, exist_ok=True)
+#
+#
+# def download_csv():
+#     """Функция для загрузки файла CSV по URL, конвертация в JSON и сохранение для последующей загрузки в базу знаний."""
+#     try:
+#         """Сохранение нового файла"""
+#         save_path = os.path.join(DATA_FOLDER, f"aiCSV.csv")
+#         response = requests.get(CSV_URL)
+#         print(f"RESPONSE: {response}")
+#         response.raise_for_status()  # Проверка на ошибки HTTP
+#
+#         with open(save_path, 'wb') as file:
+#             file.write(response.content)
+#
+#         print(f"Файл успешно загружен и сохранен в {save_path}")
+#     except requests.exceptions.RequestException as e:
+#         print(f"Ошибка при загрузке файла: {e}")
+#
+#     result = {}
+#
+#     """Чтение CSV-файла и преобразование в структуру JSON"""
+#     with open(csv_file_path, encoding='utf-8') as csv_file:
+#         reader = csv.DictReader(csv_file, delimiter=';')
+#         for row in reader:
+#             name = row['NAME']
+#             raw_price = row['PRICE']
+#
+#             # Удаляем все символы, кроме цифр и точки
+#             cleaned_price = re.sub(r'[^\d.]', '', raw_price)
+#             price = float(cleaned_price) if cleaned_price else 0
+#
+#             section_name = row['SECTION_NAME']
+#
+#             # Проверка, начинается ли NAME со слова "Смартфон"
+#             if name.startswith("Смартфон"):
+#                 if price > 3000:
+#                     section_name += ", дорогой телефон, крутой телефон, флагман, лучший, премиум, качественный, бомбический, мощный, кайфовый, стильный, трендовый"
+#                 elif 1000 <= price <= 3000:
+#                     section_name += ", средний, обычный"
+#                 elif price < 1000:
+#                     section_name += ", бюджетный, дешевый, простой, экономный, дешевый"
+#
+#             # Добавляем запись в словарь, используя 'NAME' в качестве ключа
+#             result[name] = {
+#                 "ID": row['ID'],
+#                 "SECTION_NAME": section_name,
+#                 "DESCRIPTION": row['DESCRIPTION'],
+#                 "PRICE": row['PRICE'],
+#                 "URL": row['URL'],
+#                 "SALES": row['SALES'],
+#                 "PREORDER": row['PREORDER']
+#             }
+#
+#     """Удаление всех существующих файлов в папке DATA_FOLDER_JSON"""
+#     """Файлы, которые всегда должны быть в БД. Они практически никогда не меняются"""
+#     # file_const = ['el_cars.json', 'faq.json', 'salons.json']
+#
+#     for filename in os.listdir(DATA_FOLDER_JSON):
+#         file_path2 = os.path.join(DATA_FOLDER_JSON, filename)
+#         try:
+#             if os.path.isfile(file_path2):
+#                 os.remove(file_path2)
+#                 print(f"Удален файл: {file_path2}")
+#         except Exception as e:
+#             print(f"Не удалось удалить файл {file_path2}: {e}")
+#
+#     """Сохранение результата в JSON файл"""
+#     # time.sleep(2)
+#     with open(f'upload_files/ai_nsv{time.process_time()}.json', 'w', encoding='utf-8') as json_file:
+#         json.dump(result, json_file, indent=4, ensure_ascii=False)
+#
+#     print("Конвертация завершена. Данные сохранены в 'upload_files/ai_nsv*.json'.")
+#
 
+
+additional_json_files = ['el_cars.json', 'faq.json', 'salons.json']
 
 def download_csv():
     """Функция для загрузки файла CSV по URL, конвертация в JSON и сохранение для последующей загрузки в базу знаний."""
@@ -128,9 +205,6 @@ def download_csv():
             }
 
     """Удаление всех существующих файлов в папке DATA_FOLDER_JSON"""
-    """Файлы, которые всегда должны быть в БД. Они практически никогда не меняются"""
-    # file_const = ['el_cars.json', 'faq.json', 'salons.json']
-
     for filename in os.listdir(DATA_FOLDER_JSON):
         file_path2 = os.path.join(DATA_FOLDER_JSON, filename)
         try:
@@ -141,9 +215,26 @@ def download_csv():
             print(f"Не удалось удалить файл {file_path2}: {e}")
 
     """Сохранение результата в JSON файл"""
-    # time.sleep(2)
-    with open(f'upload_files/ai_nsv{time.process_time()}.json', 'w', encoding='utf-8') as json_file:
+    json_filename = f'ai_nsv{time.process_time()}.json'
+    with open(os.path.join(DATA_FOLDER_JSON, json_filename), 'w', encoding='utf-8') as json_file:
         json.dump(result, json_file, indent=4, ensure_ascii=False)
 
-    print("Конвертация завершена. Данные сохранены в 'upload_files/ai_nsv*.json'.")
+    print(f"Конвертация завершена. Данные сохранены в '{json_filename}'.")
 
+    """Копирование дополнительных JSON-файлов с уникальными именами"""
+    copy_additional_json_files()
+
+def copy_additional_json_files():
+    """Копирование дополнительных JSON-файлов с присвоением уникального имени."""
+    for file_name in additional_json_files:
+        source_path = os.path.join(DATA_FOLDER, file_name)
+        if os.path.exists(source_path):
+            unique_filename = f"{os.path.splitext(file_name)[0]}_{int(time.time())}.json"
+            destination_path = os.path.join(DATA_FOLDER_JSON, unique_filename)
+            try:
+                shutil.copy2(source_path, destination_path)
+                print(f"Файл {file_name} успешно скопирован в {destination_path}")
+            except Exception as e:
+                print(f"Ошибка при копировании файла {file_name}: {e}")
+        else:
+            print(f"Файл {file_name} не найден в папке {DATA_FOLDER}")

@@ -31,22 +31,6 @@ temperature = 0
 llm = ChatOpenAI(model=model_name, temperature=temperature)
 
 
-# Укажите URL для загрузки файла
-CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
-
-# CSV_URL = "https://storage.yandexcloud.net/utlik/skycross/csv/aiCSV%20(6).csv"
-
-# Укажите путь для папки, где будут храниться файлы
-DATA_FOLDER = "data"
-DATA_FOLDER_JSON = "upload_files"
-
-# Укажите путь к вашему CSV файлу
-csv_file_path = 'data/aiCSV.csv'
-
-# Создание папок, если их нет
-os.makedirs(DATA_FOLDER, exist_ok=True)
-os.makedirs(DATA_FOLDER_JSON, exist_ok=True)
-
 
 load_dotenv()
 oauth = OAuth()
@@ -114,15 +98,15 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
-    schedule.every().day.at("03:00").do(download_csv)
-    schedule.every().day.at("05:00").do(download_csv)
-    schedule.every().day.at("07:00").do(download_csv)
-    schedule.every().day.at("09:00").do(download_csv)
-    schedule.every().day.at("11:00").do(download_csv)
-    schedule.every().day.at("13:00").do(download_csv)
-    schedule.every().day.at("15:00").do(download_csv)
-    schedule.every().day.at("17:00").do(download_csv)
-    # schedule.every(1).minutes.do(download_csv)
+    # schedule.every().day.at("03:00").do(download_csv)
+    # schedule.every().day.at("05:00").do(download_csv)
+    # schedule.every().day.at("07:00").do(download_csv)
+    # schedule.every().day.at("09:00").do(download_csv)
+    # schedule.every().day.at("11:00").do(download_csv)
+    # schedule.every().day.at("13:00").do(download_csv)
+    # schedule.every().day.at("15:00").do(download_csv)
+    # schedule.every().day.at("17:00").do(download_csv)
+    schedule.every(2).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 
     while True:
@@ -229,7 +213,7 @@ def run_document_processing_cycle():
             else:
                 # Если новых файлов нет, ждем 60 секунд перед следующей проверкой
                 print("Новых файлов не обнаружено. Ожидание...")
-                time.sleep(600)
+                time.sleep(30)
 
 
         except Exception as e:

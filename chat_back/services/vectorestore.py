@@ -165,93 +165,93 @@ DOCS = load_documents_local(BASE_DIRECTORY, FILE_TYPES)
 
 from typing import List
 
-# def split_docs_to_chunks(documents: dict, file_types: List[str], chunk_size=3000, chunk_overlap=100):
-#     all_chunks = []
-#     if 'txt' in file_types and documents['txt'] is not None:
-#         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-#         txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['txt']]
-#         txt_chunks = [item for sublist in txt_chunks for item in sublist]
-#         all_chunks.extend(txt_chunks)
-#
-#     if 'json' in file_types and documents['json'] is not None:
-#         json_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-#         json_chunks = json_splitter.create_documents([json.dumps(doc, ensure_ascii=False) for doc in documents['json']],
-#                                                      metadatas=documents['json_metadata'])
-#         all_chunks.extend(json_chunks)
-#
-#     if 'docx' in file_types and documents['docx'] is not None:
-#         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-#         txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['docx']]
-#         txt_chunks = [item for sublist in txt_chunks for item in sublist]
-#         all_chunks.extend(txt_chunks)
-#
-#     if 'csv' in file_types and documents['csv'] is not None:
-#         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-#         txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['csv']]
-#         txt_chunks = [item for sublist in txt_chunks for item in sublist]
-#         all_chunks.extend(txt_chunks)
-#
-#     return all_chunks
-
-
-def split_docs_to_chunks(documents: dict, file_types: List[str]):
+def split_docs_to_chunks(documents: dict, file_types: List[str], chunk_size=3000, chunk_overlap=200):
     all_chunks = []
-
-    def split_by_braces_and_comma(text):
-        # Разбиваем текст после каждого десятого сочетания '};'
-        pattern = r"(},)"
-        matches = list(re.finditer(pattern, text))
-
-        # Индексы, где нужно разрезать
-        split_indices = [match.end() for i, match in enumerate(matches) if (i + 1) % 8 == 0]
-
-        # Если разрезов не найдено, возвращаем оригинальный текст как один чанк
-        if not split_indices:
-            return [text]
-
-        # Создаем чанки по этим индексам
-        start_idx = 0
-        chunks = []
-        for idx in split_indices:
-            chunks.append(text[start_idx:idx].strip())
-            start_idx = idx
-
-        # Добавляем оставшуюся часть текста
-        chunks.append(text[start_idx:].strip())
-        return chunks
-
     if 'txt' in file_types and documents['txt'] is not None:
-        for doc in documents['txt']:
-            chunks = split_by_braces_and_comma(doc.page_content)
-            for chunk in chunks:
-                all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['txt']]
+        txt_chunks = [item for sublist in txt_chunks for item in sublist]
+        all_chunks.extend(txt_chunks)
 
     if 'json' in file_types and documents['json'] is not None:
-        for idx, doc in enumerate(documents['json']):
-            text = json.dumps(doc, ensure_ascii=False)
-            chunks = split_by_braces_and_comma(text)
-            for chunk in chunks:
-                all_chunks.append(Document(source=documents['json_metadata'][idx]['source'], page_content=chunk))
+        json_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        json_chunks = json_splitter.create_documents([json.dumps(doc, ensure_ascii=False) for doc in documents['json']],
+                                                     metadatas=documents['json_metadata'])
+        all_chunks.extend(json_chunks)
 
     if 'docx' in file_types and documents['docx'] is not None:
-        for doc in documents['docx']:
-            chunks = split_by_braces_and_comma(doc.page_content)
-            for chunk in chunks:
-                all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
-
-    if 'pdf' in file_types and documents['pdf'] is not None:
-        for doc in documents['pdf']:
-            chunks = split_by_braces_and_comma(doc.page_content)
-            for chunk in chunks:
-                all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['docx']]
+        txt_chunks = [item for sublist in txt_chunks for item in sublist]
+        all_chunks.extend(txt_chunks)
 
     if 'csv' in file_types and documents['csv'] is not None:
-        for doc in documents['csv']:
-            chunks = split_by_braces_and_comma(doc.page_content)
-            for chunk in chunks:
-                all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        txt_chunks = [text_splitter.split_documents([doc]) for doc in documents['csv']]
+        txt_chunks = [item for sublist in txt_chunks for item in sublist]
+        all_chunks.extend(txt_chunks)
 
     return all_chunks
+
+
+# def split_docs_to_chunks(documents: dict, file_types: List[str]):
+#     all_chunks = []
+#
+#     def split_by_braces_and_comma(text):
+#         # Разбиваем текст после каждого десятого сочетания '};'
+#         pattern = r"(},)"
+#         matches = list(re.finditer(pattern, text))
+#
+#         # Индексы, где нужно разрезать
+#         split_indices = [match.end() for i, match in enumerate(matches) if (i + 1) % 8 == 0]
+#
+#         # Если разрезов не найдено, возвращаем оригинальный текст как один чанк
+#         if not split_indices:
+#             return [text]
+#
+#         # Создаем чанки по этим индексам
+#         start_idx = 0
+#         chunks = []
+#         for idx in split_indices:
+#             chunks.append(text[start_idx:idx].strip())
+#             start_idx = idx
+#
+#         # Добавляем оставшуюся часть текста
+#         chunks.append(text[start_idx:].strip())
+#         return chunks
+#
+#     if 'txt' in file_types and documents['txt'] is not None:
+#         for doc in documents['txt']:
+#             chunks = split_by_braces_and_comma(doc.page_content)
+#             for chunk in chunks:
+#                 all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+#
+#     if 'json' in file_types and documents['json'] is not None:
+#         for idx, doc in enumerate(documents['json']):
+#             text = json.dumps(doc, ensure_ascii=False)
+#             chunks = split_by_braces_and_comma(text)
+#             for chunk in chunks:
+#                 all_chunks.append(Document(source=documents['json_metadata'][idx]['source'], page_content=chunk))
+#
+#     if 'docx' in file_types and documents['docx'] is not None:
+#         for doc in documents['docx']:
+#             chunks = split_by_braces_and_comma(doc.page_content)
+#             for chunk in chunks:
+#                 all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+#
+#     if 'pdf' in file_types and documents['pdf'] is not None:
+#         for doc in documents['pdf']:
+#             chunks = split_by_braces_and_comma(doc.page_content)
+#             for chunk in chunks:
+#                 all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+#
+#     if 'csv' in file_types and documents['csv'] is not None:
+#         for doc in documents['csv']:
+#             chunks = split_by_braces_and_comma(doc.page_content)
+#             for chunk in chunks:
+#                 all_chunks.append(Document(source=doc.source, page_content=chunk, metadata=doc.metadata))
+#
+#     return all_chunks
 
 
 chunks_res = split_docs_to_chunks(DOCS, ['txt', 'json', 'docx', 'csv'])

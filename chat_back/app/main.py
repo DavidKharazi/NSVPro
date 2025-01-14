@@ -76,8 +76,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.mount("/", StaticFiles(directory="../chat-front/dist", html=True), name="static")
-app.mount("/", StaticFiles(directory="./dist", html=True), name="static")
+app.mount("/", StaticFiles(directory="../chat-front/dist", html=True), name="static")
+# app.mount("/", StaticFiles(directory="./dist", html=True), name="static")
 
 
 def check_new_files(previous_files, current_files):
@@ -98,6 +98,8 @@ def run_document_processing_cycle():
     # Список ранее обработанных файлов
     previous_files = []
 
+    download_csv()
+
     # schedule.every().day.at("03:00").do(download_csv)
     # schedule.every().day.at("05:00").do(download_csv)
     # schedule.every().day.at("07:00").do(download_csv)
@@ -105,8 +107,8 @@ def run_document_processing_cycle():
     # schedule.every().day.at("11:00").do(download_csv)
     # schedule.every().day.at("13:00").do(download_csv)
     # schedule.every().day.at("15:00").do(download_csv)
-    schedule.every().day.at("10:00").do(download_csv)
-    # schedule.every(2).minutes.do(download_csv)
+    # schedule.every().day.at("10:00").do(download_csv)
+    # schedule.every(120).minutes.do(download_csv)
     print("Запущен планировщик для загрузки файла CSV.")
 
     while True:

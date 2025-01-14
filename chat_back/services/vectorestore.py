@@ -21,8 +21,8 @@ import re
 current_user = "TEST2"
 
 
-model_id = 'intfloat/multilingual-e5-large'
-# model_id = 'intfloat/multilingual-e5-base'
+# model_id = 'intfloat/multilingual-e5-large'
+model_id = 'intfloat/multilingual-e5-base'
 model_kwargs = {'device': 'cpu'} # Настройка для использования CPU (можно переключить на GPU)
 # model_kwargs = {'device': 'cuda'}
 embeddings = HuggingFaceEmbeddings(

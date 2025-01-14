@@ -49,12 +49,12 @@ function ChatBot({ closeChat, isLeft }: IChatBotProps) {
       const username = localStorage.getItem('username');
       if (username && !wsRef.current) {
         // Проверяем, что WebSocket еще не создан
-        // const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
-        const ws = new WebSocket(
-            `wss://nsvcyberman1.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
-                username
-            )}`
-        );
+        const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
+        // const ws = new WebSocket(
+        //     `wss://nsvcyberman.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
+        //         username
+        //     )}`
+        // );
         wsRef.current = ws; // Сохраняем WebSocket в useRef
 
         ws.onopen = () => {
@@ -190,12 +190,12 @@ function ChatBot({ closeChat, isLeft }: IChatBotProps) {
       }
 
 
-      // const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
-      const ws = new WebSocket(
-          `wss://nsvcyberman1.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
-              username
-          )}`
-      );
+      const ws = new WebSocket(`ws://localhost:8000/ws/rag_chat/?email=${encodeURIComponent(username)}`);
+      // const ws = new WebSocket(
+      //     `wss://nsvcyberman.up.railway.app/ws/rag_chat/?email=${encodeURIComponent(
+      //         username
+      //     )}`
+      // );
       setSocket(ws);
       wsRef.current = ws; // Сохраняем WebSocket в useRef
 
@@ -335,103 +335,6 @@ function ChatBot({ closeChat, isLeft }: IChatBotProps) {
     navigator.sendBeacon(apiUrl, blob);
   };
 
-//   return (
-//     <div className={styles.botContainer}>
-//       <div className={styles.botWrapper}>
-//         <div className={styles.botHeader}>
-//           <button type="button" className={styles.botHeaderArrow}></button>
-//           Олег
-//         </div>
-//         <div className={styles.chat} ref={chatContainerRef}>
-//           <div className={styles.chatIcon}>
-//             <div className={styles.chatImg}>
-//               <img src={icon} alt="support-image" width="70" height="70" />
-//             </div>
-//             <span className={styles.chatSupportTime}>
-//               Всегда в сети
-//             </span>
-//             <p className={styles.chatSupport}>Support</p>
-//           </div>
-//           <div className={styles.chatMessages}>
-//             {chat.map((msg, index) => (
-//               <ChatMessage key={index} text={msg.text} isMe={msg.isMe} />
-//             ))}
-//           </div>
-//           {isWriting && (
-//             <div className={styles.botWriting}>
-//               <p>Олег пишет...</p>
-//               <span className={styles.loader}></span>
-//             </div>
-//           )}
-//         </div>
-//
-//         {!isRegistered ? (
-//           <div className={styles.registerForm}>
-//             <input
-//               type="text"
-//               placeholder="Введите имя"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//             />
-//             <div className={styles.phoneInput}>
-//               <span>+375</span> {/* Префикс телефона */}
-//               <input
-//                 type="text"
-//                 maxLength={9} // Ограничиваем ввод 9 цифрами
-//                 placeholder="9 цифр"
-//                 value={phone}
-//                 onChange={(e) => {
-//                   const value = e.target.value;
-//                   if (/^\d*$/.test(value)) {
-//                     // Проверяем, что вводятся только цифры
-//                     setName(value);
-//                   }
-//                 }}
-//               />
-//             </div>
-//             <button onClick={handleRegister}>Отправить</button>
-//           </div>
-//         ) : (
-//           <div className={styles.inpForm}>
-//             <div
-//               className={styles.inpText}
-//               contentEditable
-//               role="textbox"
-//               onKeyDown={handleKeyDown}
-//               onInput={handleInput}
-//               ref={inpTextRef}
-//               data-placeholder="Введите ваше сообщение"
-//             />
-//             <div className={styles.btnsWrapper}>
-//               <button
-//                 disabled={isWriting}
-//                 className={listening ? styles.recording : styles.btnVoice}
-//                 onClick={handleRecordVoice}
-//               >
-//                 {!listening && <img src={microOff} alt="micro-icon" />}
-//               </button>
-//               <button
-//                 disabled={isWriting}
-//                 className={
-//                   message.text.length
-//                     ? styles.inpSubmitActive
-//                     : isWriting
-//                     ? styles.inpSubmitStop
-//                     : styles.inpSubmit
-//                 }
-//                 onClick={() => sendMessageToBot(message.text)}
-//               />
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//       <button
-//         className={isLeft ? styles.closeBtnRight : styles.closeBtnLeft}
-//         onClick={() => closeChat()}
-//       ></button>
-//     </div>
-//   );
-// }
 
   return (
       <div className={styles.botContainer}>

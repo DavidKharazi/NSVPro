@@ -10,7 +10,7 @@ from .tools import create_order
 load_dotenv()
 
 # Получаем ключ из переменных окружения
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "my_api"
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 class Agent(BaseModel):

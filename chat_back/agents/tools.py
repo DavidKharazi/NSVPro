@@ -10,7 +10,7 @@ import json
 import re
 
 
-os.environ['OPENAI_API_KEY'] = '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'
+os.environ['OPENAI_API_KEY'] = 'my_api'
 
 
 model_name = "gpt-4o-mini"

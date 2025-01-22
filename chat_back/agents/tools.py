@@ -61,7 +61,7 @@ def create_order(product_id: int, fio: str, phone: str, preorder: str) -> dict:
 
 
 # Укажите URL для загрузки файла
-CSV_URL = "https://nsv.by/dev/aicsv.php?key=cJT3qhgB9L9SjUmOko&ssid=1oAalTb506IyIonIFZLvgCa7LQ1VzsQQ&GEZhyH9Z=q0HR214dKNBFQHlHiIOZrlDxeCjyrmKWNbVhFqhZCPylzeRKHb"
+CSV_URL = "my_csv_url"
 
 # CSV_URL = "https://storage.yandexcloud.net/utlik/skycross/csv/aiCSV%20(6).csv"
 
